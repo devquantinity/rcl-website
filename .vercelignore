@@ -1,4 +1,7 @@
 _unused/
 assets/unused/
 templates/
+docs/
+src/
 *.juristiq-backup.html
+README.md
