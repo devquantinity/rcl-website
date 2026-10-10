@@ -244,6 +244,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .rlc-profile:first-child { border-top: 0; padding-top: 0; }
 .rlc-profile-photo {
     width: 100%;
+    height: auto; /* the img's height attribute would otherwise force 1125px */
     aspect-ratio: 4 / 5;
     object-fit: cover;
     object-position: 50% 15%;
