@@ -109,6 +109,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 }
 .home-banner-paragraph-wrap { max-width: 520px; }
 .banner-clients-text { max-width: 290px; line-height: 1.5; }
+/* the scales icon ships dark; render every hero benefit icon white like the shield */
+.home-banner-section .benefit-icon { filter: brightness(0) invert(1); }
 .rlc-card-link {
     display: inline-block;
     margin-top: 12px;
@@ -134,11 +136,18 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .service-number, .banner-clients-number { color: var(--rlc-brass-dark) !important; }
 .process-line, .service-detailed-card-icon-wrap { background-color: var(--rlc-brass) !important; }
 .primary-button:hover, .light-primary-button:hover, .secondary-button:hover {
-    background-color: var(--rlc-brass) !important;
-    border-color: var(--rlc-brass) !important;
+    background-color: var(--rlc-brass-dark) !important;
+    background-image: none !important;
+    border-color: var(--rlc-brass-dark) !important;
     color: #fff !important;
 }
 .rlc-lead { font-size: 20px; line-height: 1.6; max-width: 760px; }
+.services-wrap > .w-dyn-list { display: flex; flex-direction: column; }
+.services-wrap > .w-dyn-list > .w-dyn-items { flex: 1; display: flex; flex-direction: column; }
+.services-wrap .service-collection-item { flex: 1; }
+/* enquiry banner copy sits on a photo: lift it to a readable size and tone */
+.cta-paragraph-wrap .light-text { color: #e4e8f0; font-size: 18px; line-height: 1.55; }
+.rlc-team-title { max-width: 620px; }
 .section-title-wrap.rlc-wide { max-width: 820px; }
 .ceo-quote-card { height: auto !important; min-height: 400px; }
 .home-process-block-left-wrap { padding-bottom: 64px; }
@@ -220,6 +229,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 
 /* ---------- our team ---------- */
 .team-page-collection-list .team-member-link-block { height: 440px; }
+/* white-backdrop portraits need an edge so every card reads as a card */
+.team-page-collection-list .team-member-link-block, .rlc-profile-photo { border: 1px solid var(--rlc-line); }
 .team-page-collection-list .team-member-name-wrap p { color: var(--paragraph-color); }
 .rlc-profiles { display: flex; flex-direction: column; }
 .rlc-profile {
@@ -279,6 +290,12 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .rlc-form [type="submit"][disabled] { opacity: 0.6; cursor: progress; }
 .rlc-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
 .contacts-links-wrap { display: flex; flex-direction: column; gap: 14px; }
+.contact-us-page .contacts-banner-left-wrap { justify-content: flex-start; gap: 40px; }
+@media (min-width: 992px) and (max-width: 1279px) {
+    /* give the form room so two-column fields don't truncate on small laptops */
+    .contact-us-page .contacts-banner-left-wrap { width: 44%; }
+    .contact-us-page .form-block { width: 54%; }
+}
 .rlc-map-wrap { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 64px; align-items: center; }
 .rlc-map-text { display: flex; flex-direction: column; gap: 22px; }
 .rlc-map-text address { font-style: normal; font-size: 19px; line-height: 1.6; color: var(--dark-primary); }
@@ -310,6 +327,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     .footer-logo { height: 48px !important; }
 }
 @media (max-width: 767px) {
+    .testimonial-tab-link.w--current .commitment-tab-label { color: var(--dark-primary) !important; }
     .rlc-purpose { grid-template-columns: 1fr; padding: 40px 0; gap: 16px; }
     .rlc-profile { grid-template-columns: 1fr; gap: 28px; padding: 56px 0; }
     .rlc-profile-photo { max-width: 320px; position: static; }
@@ -317,6 +335,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     .team-page-collection-list .team-member-link-block { height: 420px; }
 }
 @media (max-width: 479px) {
+    .footer-links-wrap { column-gap: 28px; }
+    .footer-link { white-space: normal; }
     .rlc-expertise-list { columns: 1; }
     .rlc-lead, .rlc-purpose-body p { font-size: 17px; }
     .rlc-map { height: 320px; }
