@@ -62,7 +62,6 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     .brand-logo { height: 40px !important; }
     .brand-tablet { filter: none; }
     .brand-tablet .brand-logo { height: 34px !important; }
-    .nav-link.w--current { color: var(--rlc-brass-dark); }
 }
 @media (max-width: 479px) {
     .nav-menu-wrapper > .brand .brand-logo { height: 36px !important; }
@@ -71,7 +70,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 /* ---------- home hero ---------- */
 .home-banner-section { overflow: hidden; }
 /* one smooth navy fade over the photo, plus a lower fade so the benefit text stays readable */
-@media (min-width: 480px) {
+@media (min-width: 768px) {
     .home-banner-gradient {
         width: 70%;
         background-image: linear-gradient(90deg, var(--dark-primary) 0%, rgba(42, 65, 115, 0.72) 32%, rgba(42, 65, 115, 0) 100%);
@@ -150,7 +149,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .rlc-team-title { max-width: 620px; }
 .section-title-wrap.rlc-wide { max-width: 820px; }
 .ceo-quote-card { height: auto !important; min-height: 400px; }
-.home-process-block-left-wrap { padding-bottom: 64px; }
+@media (min-width: 992px) { .home-process-block-left-wrap { padding-bottom: 64px; } }
 .section.process-section.rlc-vision { padding-top: var(--_spacing-system---spacing--section-spacing); }
 .rlc-vision h2 { font-size: clamp(2rem, 1.3rem + 1.6vw, 2.75rem); }
 @media (min-width: 992px) { .rlc-vision .process-image { margin-top: 520px; } }
@@ -319,6 +318,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 
 /* ---------- responsive ---------- */
 @media (max-width: 991px) {
+    .ceo-quote-card { min-height: 0; gap: 32px; }
     .banner-clients-card-top-wrap { flex-wrap: wrap; }
     .footer-links-wrap { width: auto; column-gap: 56px; }
     .rlc-expertise-list { columns: 2; column-gap: 40px; }
@@ -328,12 +328,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     .footer-logo { height: 48px !important; }
 }
 @media (max-width: 767px) {
-    .testimonial-tab-link.w--current .commitment-tab-label { color: var(--dark-primary) !important; }
     .rlc-purpose { grid-template-columns: 1fr; padding: 40px 0; gap: 16px; }
-    .rlc-profile { grid-template-columns: 1fr; gap: 28px; padding: 56px 0; }
-    .rlc-profile-photo { max-width: 320px; position: static; }
     .rlc-expertise-foot { padding: 28px 24px; }
-    .team-page-collection-list .team-member-link-block { height: 420px; }
 }
 @media (max-width: 479px) {
     .footer-links-wrap { column-gap: 28px; }
@@ -341,7 +337,6 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     .rlc-expertise-list { columns: 1; }
     .rlc-lead, .rlc-purpose-body p { font-size: 17px; }
     .rlc-map { height: 320px; }
-    .team-page-collection-list .team-member-link-block { height: 460px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -360,3 +355,151 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .rlc-fade { animation: rlc-fade 0.9s var(--rlc-ease) both; animation-delay: var(--d, 0s); }
 @keyframes rlc-fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .rlc-fade { animation-duration: 1ms !important; animation-delay: 0s !important; } }
+
+/* =====================================================================
+   Phones and tablets
+   ===================================================================== */
+html { -webkit-tap-highlight-color: rgba(184, 137, 59, 0.18); }
+html.rlc-menu-open, html.rlc-menu-open body { overflow: hidden; }
+@media (min-width: 992px) { .rlc-menu-contact { display: none; } }
+
+/* section buttons beside a heading keep their size */
+.horizontal-title-wrap > .mobile-hidden-wrap { flex-shrink: 0; }
+.horizontal-title-wrap .w-button { white-space: nowrap; }
+
+/* full-screen navy menu */
+@media (max-width: 991px) {
+    /* webflow pins the overlay to the width measured before the scroll lock hides the scrollbar */
+    .w-nav[data-animation="over-left"] .w-nav-overlay { width: 100% !important; }
+    .nav-menu {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        background-color: var(--dark-primary);
+        text-align: left;
+        overflow-y: auto;
+    }
+    .tablet-menu { height: 72px; padding: 0 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+    .close-menu-button, .close-menu-button.w--open { padding: 12px !important; margin: 0 -12px 0 0 !important; }
+    .nav-close-icon { filter: brightness(0) invert(1); width: 20px; }
+    .menu-wrap { background-color: transparent; padding: 8px 20px 40px; }
+    .nav-link, .nav-link.w--current {
+        color: #fff;
+        font-family: var(--_typography---fonts--headings);
+        font-size: 28px;
+        line-height: 1.2;
+        padding: 18px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .nav-link.w--current { color: var(--rlc-brass-light); }
+    .nav-link:hover { color: var(--rlc-brass-light); }
+    .nav-button-tablet { margin-top: 32px; }
+    .nav-button-tablet .primary-button {
+        width: 100%;
+        padding: 18px 24px;
+        background-color: #fff;
+        background-image: none;
+        color: var(--dark-primary);
+        box-shadow: none;
+        font-size: 17px;
+    }
+    .rlc-menu-contact { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+    .rlc-menu-contact a { display: flex; align-items: center; gap: 12px; color: var(--gray); font-size: 16px; font-weight: 400; }
+    .rlc-menu-contact img { height: 18px; }
+    .footer-link { padding: 5px 0; }
+    .rlc-back-top { padding: 6px 0; }
+    .ceo-quote-text { max-width: 600px; }
+}
+
+/* home hero: on phones the skyline sits at the top and the copy rises out of it */
+@media (max-width: 767px) {
+    .home-banner-section { padding-top: clamp(250px, 56vw + 70px, 400px); padding-bottom: 56px; }
+    .home-banner-bg { inset: 0 0 auto 0; width: 100%; max-width: none; height: clamp(330px, 66vw + 110px, 520px); }
+    .home-banner-image { height: 100%; object-position: 70% 45%; }
+    .home-banner-gradient {
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(180deg, rgba(42, 65, 115, 0.55) 0%, rgba(42, 65, 115, 0) 24%, rgba(42, 65, 115, 0) 50%, var(--dark-primary) 97%);
+    }
+    .rlc-eyebrow { margin-bottom: 14px; }
+    .home-banner-left-wrap { gap: 48px; }
+
+    /* vision: button sits under the heading */
+    .home-process-block-left-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; }
+
+    /* Quality / Trust / Integrity as a segmented control */
+    .testimonials-tabs { flex-direction: column; }
+    .testimonials-tabs-menu { flex-direction: row; align-items: stretch; gap: 6px; margin: 0; padding: 6px; border-right: 0; border-bottom: 1px solid var(--rlc-line); }
+    .testimonial-tab-link, .testimonial-tab-link.first, .testimonial-tab-link.last {
+        flex: 1 1 0;
+        width: auto;
+        padding: 12px 4px;
+        border-bottom: 0;
+        border-radius: 6px;
+        background-color: transparent;
+        justify-content: center;
+    }
+    .testimonial-tab-link.w--current { background-color: var(--dark-primary); }
+    .testimonial-tab-link.w--current .commitment-tab-label { color: #fff !important; }
+    .commitment-tab-label { font-size: 13px; letter-spacing: 0.12em; }
+    .testimonial-text-wrap { padding: 36px 32px 0; }
+    .testimonial-image-wrap { height: 300px; }
+
+    /* team page: two portraits per row */
+    .team-page-collection-list { grid-template-columns: 1fr 1fr; column-gap: 16px; row-gap: 28px; }
+    .team-page-collection-list .team-member-link-block { height: auto; aspect-ratio: 4 / 5; }
+    .team-page-collection-list .team-member-card-info-wrap { padding-top: 12px; }
+    .team-page-collection-list .team-member-name-link { font-size: 18px; line-height: 1.3; }
+    .team-page-collection-list .team-member-name-wrap p { font-size: 14px; line-height: 1.4; }
+
+    /* profiles: small portrait beside the name, biography full width below */
+    .rlc-profile { grid-template-columns: 88px minmax(0, 1fr); column-gap: 18px; row-gap: 0; padding: 44px 0; align-items: center; }
+    .rlc-profile:first-child { padding-top: 0; }
+    .rlc-profile > div:first-child { grid-row: 1 / span 2; }
+    .rlc-profile > div:last-child { display: contents; }
+    .rlc-profile-photo { position: static; width: 88px; border-radius: 8px; }
+    .rlc-profile .label { grid-column: 2; align-self: end; font-size: 12px; }
+    .rlc-profile-name { grid-column: 2; align-self: start; margin: 6px 0 0; font-size: 1.6rem; }
+    .rlc-profile-text, .rlc-back-top { grid-column: 1 / -1; justify-self: start; }
+    .rlc-profile-text { margin-top: 24px; }
+    .rlc-profile-text p { font-size: 16px; line-height: 1.7; }
+}
+
+/* large phones and small tablets: a bigger portrait and a full-width intro */
+@media (min-width: 480px) and (max-width: 767px) {
+    .rlc-profile { grid-template-columns: 120px minmax(0, 1fr); column-gap: 24px; }
+    .rlc-profile-photo { width: 120px; }
+    .rlc-about-block .about-paragraph-wrap { max-width: none; }
+}
+
+@media (max-width: 479px) {
+    h2 { font-size: 2rem; line-height: 1.18; }
+    .footer-form-title { font-size: 1.75rem; }
+    .service-link, .stage-title { font-size: 22px; }
+    .testimonial-text { font-size: 19px; }
+    .ceo-quote-text { font-size: 18px; }
+    .label { font-size: 13px; }
+
+    /* inner page banners read left-aligned on a phone */
+    .rlc-banner .central-banner-wrap { justify-content: flex-start; }
+    .rlc-banner .central-banner-text-wrapper, .rlc-banner .central-banner-text { align-items: flex-start; text-align: left; }
+    .rlc-banner .center-paragraph-wrapper { max-width: none; }
+    .rlc-banner h1 { font-size: 2.2rem; }
+    .rlc-404 .home-banner-button-wrapper { width: 100%; }
+
+    /* home team: both partners side by side */
+    .team-collection-list { grid-template-columns: 1fr 1fr; column-gap: 14px; row-gap: 24px; }
+    .team-collection-list .team-member-link-block { height: auto; aspect-ratio: 4 / 5; }
+    .team-collection-list .team-member-card-info-wrap { padding-top: 12px; }
+    .team-collection-list .team-member-name-link { font-size: 17px; line-height: 1.3; }
+    .team-collection-list .team-member-name-wrap p { font-size: 13px; line-height: 1.4; }
+
+    /* segmented control: tighter on small phones */
+    .commitment-tab-label { font-size: 12px; }
+    .testimonial-text-wrap { padding: 28px 22px 0; }
+    .testimonial-image-wrap { height: 220px; }
+
+    .rlc-expertise-list li { padding: 14px 0; font-size: 17px; }
+}
+

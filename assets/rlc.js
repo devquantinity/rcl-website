@@ -24,6 +24,14 @@
         }
     }
 
+    // While the full-screen mobile menu is open, stop the page behind it from scrolling.
+    var menuButton = document.querySelector('.menu-button');
+    if (menuButton && 'MutationObserver' in window) {
+        new MutationObserver(function () {
+            document.documentElement.classList.toggle('rlc-menu-open', menuButton.classList.contains('w--open'));
+        }).observe(menuButton, { attributes: true, attributeFilter: ['class'] });
+    }
+
     // Enquiry form: posts to the form relay, which emails enquiry@rlchambers.com.my.
     var form = document.querySelector('form[data-rlc-enquiry]');
     if (!form) return;
