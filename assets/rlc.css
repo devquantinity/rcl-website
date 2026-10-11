@@ -322,11 +322,9 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 @media (max-width: 991px) {
     .ceo-quote-card { min-height: 0; gap: 32px; }
     .banner-clients-card-top-wrap { flex-wrap: wrap; }
-    .footer-links-wrap { width: auto; column-gap: 56px; }
     .rlc-expertise-list { columns: 2; column-gap: 40px; }
     .rlc-profile { grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
     .rlc-map-wrap { grid-template-columns: 1fr; gap: 32px; }
-    .rlc-footer-actions { justify-content: center; }
     .footer-logo { height: 48px !important; }
 }
 @media (max-width: 767px) {
@@ -334,8 +332,6 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     .rlc-expertise-foot { padding: 28px 24px; }
 }
 @media (max-width: 479px) {
-    .footer-links-wrap { column-gap: 28px; }
-    .footer-link { white-space: normal; }
     .rlc-expertise-list { columns: 1; }
     .rlc-lead, .rlc-purpose-body p { font-size: 17px; }
     .rlc-map { height: 320px; }
@@ -408,7 +404,6 @@ html.rlc-menu-open, html.rlc-menu-open body { overflow: hidden; }
     .rlc-menu-contact { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
     .rlc-menu-contact a { display: flex; align-items: center; gap: 12px; color: var(--gray); font-size: 16px; font-weight: 400; }
     .rlc-menu-contact img { height: 18px; }
-    .footer-link { padding: 5px 0; }
     .rlc-back-top { padding: 6px 0; }
     .ceo-quote-text { max-width: 600px; }
 }
@@ -477,7 +472,6 @@ html.rlc-menu-open, html.rlc-menu-open body { overflow: hidden; }
 
 @media (max-width: 479px) {
     h2 { font-size: 2rem; line-height: 1.18; }
-    .footer-form-title { font-size: 1.75rem; }
     .service-link, .stage-title { font-size: 22px; }
     .testimonial-text { font-size: 19px; }
     .ceo-quote-text { font-size: 18px; }
@@ -505,3 +499,105 @@ html.rlc-menu-open, html.rlc-menu-open body { overflow: hidden; }
     .rlc-expertise-list li { padding: 14px 0; font-size: 17px; }
 }
 
+/* =====================================================================
+   Home hero on phones: benefits side by side, team card full width
+   ===================================================================== */
+@media (max-width: 767px) {
+    .banner-benefits-wrap { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+    .benefit-cell, .benefit-cell.last { padding: 0; border: 0; gap: 14px; }
+    .benefit-cell:not(.last) { padding-right: 20px; border-right: 1px solid rgba(255, 255, 255, 0.2); }
+    .benefit-cell.last { padding-left: 20px; }
+    .home-banner-clients-wrap { width: 100%; max-width: none; }
+    .banner-clients-card-top-wrap { flex-wrap: nowrap; }
+    .banner-clients-text { max-width: none; }
+}
+
+/* =====================================================================
+   Footer on phones and tablets: left-aligned and grouped
+   ===================================================================== */
+@media (min-width: 992px) {
+    .rlc-footer-contact-title, .footer-address-link .rlc-pin { display: none; }
+}
+@media (max-width: 991px) {
+    .footer-wrapper {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
+        grid-template-areas:
+            "logo logo logo"
+            "title title title"
+            "cta cta cta"
+            "firm clients contact";
+        column-gap: 32px;
+        row-gap: 0;
+        justify-items: start;
+        text-align: left;
+        margin-bottom: 0;
+    }
+    .footer-brand-wrapper, .footer-right-wrap, .footer-links-wrap { display: contents; text-align: left; }
+    .footer-logo-wrapper { grid-area: logo; width: auto; align-items: flex-start; margin-bottom: 32px; }
+    .footer-form-title-wrap { grid-area: title; max-width: 560px; }
+    .footer-form-title { font-size: 32px; line-height: 1.25; text-align: left; }
+    .rlc-footer-actions {
+        grid-area: cta;
+        justify-self: stretch;
+        justify-content: flex-start;
+        margin-top: 28px;
+        padding-bottom: 48px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .footer-links-wrapper { align-items: flex-start; text-align: left; gap: 12px; padding-top: 40px; }
+    .footer-links-wrapper:first-child { grid-area: firm; }
+    .footer-links-wrapper:last-child { grid-area: clients; }
+    .footer-contacts-wrap { grid-area: contact; margin-top: 0; padding-top: 40px; gap: 12px; align-items: flex-start; }
+    .footer-intro-title {
+        font-family: var(--_typography---fonts--primary);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--rlc-brass-light);
+    }
+    .links-column, .footer-contacts-wrapper, .footer-contacts-column { gap: 0; }
+    .footer-link, .footer-contact-link-block { justify-content: flex-start; padding: 7px 0; font-size: 16px; line-height: 1.5; white-space: normal; }
+    .footer-contact-link-block { gap: 12px; }
+    .footer-address-link {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 7px 0;
+        font-family: var(--_typography---fonts--primary);
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+    .footer-address-link .rlc-pin { flex: none; margin-top: 3px; }
+    .footer-bottom-wrapper {
+        flex-flow: row wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 6px 24px;
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .footer-rights { justify-content: flex-start; text-align: left; font-size: 13px; }
+}
+@media (max-width: 767px) {
+    .footer-wrapper {
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+        grid-template-areas:
+            "logo logo"
+            "title title"
+            "cta cta"
+            "firm clients"
+            "contact contact";
+        column-gap: 24px;
+    }
+    .footer-form-title { font-size: 28px; }
+    .footer-bottom-wrapper { flex-direction: column; }
+}
+@media (max-width: 479px) {
+    .footer-form-title { font-size: 26px; }
+    .footer-logo { height: 44px !important; }
+}
