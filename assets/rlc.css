@@ -227,6 +227,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .rlc-expertise-foot p { max-width: 620px; font-size: 18px; color: var(--dark-primary); font-weight: 400; }
 
 /* ---------- our team ---------- */
+/* portraits crop from the bottom when a card is wider than 4:5, never from the head */
+.team-member-photo { object-position: 50% 0%; }
 .team-page-collection-list .team-member-link-block { height: 440px; }
 /* white-backdrop portraits need an edge so every card reads as a card */
 .team-page-collection-list .team-member-link-block, .rlc-profile-photo { border: 1px solid var(--rlc-line); }
