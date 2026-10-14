@@ -153,6 +153,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .section.process-section.rlc-vision { padding-top: var(--_spacing-system---spacing--section-spacing); }
 .rlc-vision h2 { font-size: clamp(2rem, 1.3rem + 1.6vw, 2.75rem); }
 @media (min-width: 992px) { .rlc-vision .process-image { margin-top: 520px; } }
+/* keep the boardroom table and people in frame, not the ceiling */
+.rlc-vision .process-image { object-position: 50% 62%; }
 .testimonial-tab-link.w--current .commitment-tab-label { color: var(--rlc-brass-dark) !important; }
 .commitment-tab-label {
     font-size: 0.95rem; font-weight: 600; letter-spacing: 0.14em;
@@ -186,33 +188,94 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .rlc-purpose-body p + p { margin-top: 16px; }
 .rlc-purpose-body p:first-child { color: var(--dark-primary); font-weight: 400; }
 
-/* ---------- areas of expertise ---------- */
-.rlc-expertise-list {
-    display: block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background: none;
-    -webkit-background-clip: border-box;
-    background-clip: border-box;
-    -webkit-text-fill-color: currentColor;
-    font-weight: 400;
-    columns: 3;
-    column-gap: 64px;
-    border-top: 1px solid var(--rlc-line);
-}
-.rlc-expertise-list li {
-    break-inside: avoid;
+/* ---------- areas of expertise: each area opens its explanation ---------- */
+.rlc-area-list { border-top: 1px solid var(--rlc-line); }
+.rlc-area { border-bottom: 1px solid var(--rlc-line); scroll-margin-top: 110px; }
+.rlc-area-name {
     display: flex;
+    align-items: center;
     gap: 14px;
     padding: 16px 0;
-    border-bottom: 1px solid var(--rlc-line);
+    list-style: none;
+    cursor: pointer;
     color: var(--dark-primary);
     font-size: 18px;
     font-weight: 400;
     line-height: 1.4;
+    transition: color 0.2s ease;
 }
-.rlc-expertise-list li::before { content: "\2014"; color: var(--rlc-brass); flex: none; }
+.rlc-area-name::-webkit-details-marker { display: none; }
+.rlc-area-name::before { content: "\2014"; flex: none; color: var(--rlc-brass); }
+.rlc-area-name::after {
+    content: "";
+    flex: none;
+    width: 14px;
+    height: 14px;
+    margin-left: auto;
+    background:
+        linear-gradient(currentColor, currentColor) center / 14px 1.5px no-repeat,
+        linear-gradient(currentColor, currentColor) center / 1.5px 14px no-repeat;
+    color: var(--rlc-brass);
+    transition: transform 0.3s var(--rlc-ease), opacity 0.2s ease;
+}
+.rlc-area[open] > .rlc-area-name { font-weight: 500; }
+.rlc-area[open] > .rlc-area-name::after { transform: rotate(45deg); }
+@media (hover: hover) { .rlc-area-name:hover { color: var(--rlc-brass-dark); } }
+.rlc-area-body { padding: 0 40px 24px 32px; }
+.rlc-area-body p { font-size: 16px; line-height: 1.7; color: var(--paragraph-color); }
+.rlc-area[open] .rlc-area-body { animation: rlc-area-in 0.35s var(--rlc-ease) both; }
+.rlc-area-link {
+    display: inline-block;
+    margin-top: 14px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--rlc-brass);
+    color: var(--dark-primary);
+    font-weight: 500;
+}
+.rlc-area-link:hover { color: var(--rlc-brass-dark); }
+.rlc-area-panel { display: none; }
+/* sections with sticky columns clip without becoming a scroll container, so position: sticky follows the page */
+.rlc-clip { overflow: clip; }
+@keyframes rlc-area-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* wide screens: the list on the left, the open area explained in a column beside it */
+@media (min-width: 992px) {
+    .rlc-areas.is-ready { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 72px; align-items: start; }
+    .rlc-areas.is-ready .rlc-area-body { display: none; }
+    .rlc-areas.is-ready .rlc-area-name { padding: 15px 0; }
+    .rlc-areas.is-ready .rlc-area-name::after {
+        width: 9px;
+        height: 9px;
+        margin-right: 4px;
+        background: none;
+        border-top: 1.5px solid currentColor;
+        border-right: 1.5px solid currentColor;
+        transform: rotate(45deg);
+        opacity: 0;
+    }
+    .rlc-areas.is-ready .rlc-area-name:hover::after { opacity: 0.5; }
+    .rlc-areas.is-ready .rlc-area[open] > .rlc-area-name { color: var(--dark-primary); }
+    .rlc-areas.is-ready .rlc-area[open] > .rlc-area-name::after { opacity: 1; color: var(--rlc-brass); transform: rotate(45deg); }
+    .rlc-areas.is-ready .rlc-area-panel {
+        display: block;
+        position: sticky;
+        top: 120px;
+        padding: 48px 52px 52px;
+        border-radius: 8px;
+        background-color: var(--light-gray);
+    }
+    .rlc-area-count { font-size: 13px; letter-spacing: 0.16em; color: var(--rlc-brass-dark) !important; }
+    .rlc-area-title { margin: 14px 0 20px; font-size: 2.25rem; line-height: 1.2; color: var(--dark-primary); }
+    .rlc-area-panel p { max-width: 560px; font-size: 18px; line-height: 1.75; color: var(--paragraph-color); }
+    .rlc-area-panel .w-button { display: inline-flex; width: auto; margin-top: 32px; }
+    .rlc-area-panel.is-in > * { animation: rlc-area-in 0.4s var(--rlc-ease) both; }
+    .rlc-area-panel.is-in > :nth-child(2) { animation-delay: 0.04s; }
+    .rlc-area-panel.is-in > :nth-child(3) { animation-delay: 0.08s; }
+    .rlc-area-panel.is-in > :nth-child(4) { animation-delay: 0.12s; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .rlc-area[open] .rlc-area-body, .rlc-area-panel.is-in > * { animation: none; }
+}
 .rlc-expertise-foot {
     display: flex;
     flex-wrap: wrap;
@@ -322,7 +385,6 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 @media (max-width: 991px) {
     .ceo-quote-card { min-height: 0; gap: 32px; }
     .banner-clients-card-top-wrap { flex-wrap: wrap; }
-    .rlc-expertise-list { columns: 2; column-gap: 40px; }
     .rlc-profile { grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
     .rlc-map-wrap { grid-template-columns: 1fr; gap: 32px; }
     .footer-logo { height: 48px !important; }
@@ -332,7 +394,6 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     .rlc-expertise-foot { padding: 28px 24px; }
 }
 @media (max-width: 479px) {
-    .rlc-expertise-list { columns: 1; }
     .rlc-lead, .rlc-purpose-body p { font-size: 17px; }
     .rlc-map { height: 320px; }
 }
@@ -496,7 +557,8 @@ html.rlc-menu-open, html.rlc-menu-open body { overflow: hidden; }
     .testimonial-text-wrap { padding: 28px 22px 0; }
     .testimonial-image-wrap { height: 220px; }
 
-    .rlc-expertise-list li { padding: 14px 0; font-size: 17px; }
+    .rlc-area-name { padding: 14px 0; font-size: 17px; }
+    .rlc-area-body { padding: 0 8px 22px 31px; }
 }
 
 /* =====================================================================

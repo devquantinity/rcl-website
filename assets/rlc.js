@@ -32,6 +32,69 @@
         }).observe(menuButton, { attributes: true, attributeFilter: ['class'] });
     }
 
+    // Areas of expertise: on phones each area opens its explanation in place;
+    // on wide screens the open area is shown in a column beside the list.
+    var areas = document.querySelector('[data-rlc-areas]');
+    if (areas) {
+        var items = [].slice.call(areas.querySelectorAll('details.rlc-area'));
+        var panel = areas.querySelector('.rlc-area-panel');
+        var wide = window.matchMedia('(min-width: 992px)');
+        var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+        var render = function (item) {
+            if (!panel || !item) return;
+            var text = [].slice.call(item.querySelectorAll('.rlc-area-body p'))
+                .map(function (p) { return p.outerHTML; }).join('');
+            panel.innerHTML = '<div class="label rlc-area-count">' + pad(items.indexOf(item) + 1) + ' / ' + items.length + '</div>' +
+                '<h2 class="rlc-area-title">' + item.querySelector('summary').innerHTML + '</h2>' + text +
+                '<a class="primary-button w-button" href="contact-us.html">Discuss your matter</a>';
+            panel.hidden = false;
+            panel.classList.remove('is-in');
+            void panel.offsetWidth;
+            panel.classList.add('is-in');
+        };
+        var only = function (item) {
+            items.forEach(function (other) { if (other !== item && other.open) other.open = false; });
+        };
+        var fromHash = function () {
+            var id = decodeURIComponent((window.location.hash || '').slice(1));
+            var target = id ? document.getElementById(id) : null;
+            return items.indexOf(target) !== -1 ? target : null;
+        };
+        items.forEach(function (item) {
+            item.querySelector('summary').addEventListener('click', function (event) {
+                // in the column layout one area always stays selected
+                if (wide.matches && item.open) event.preventDefault();
+            });
+            item.addEventListener('toggle', function () {
+                if (!item.open) return;
+                only(item);
+                if (wide.matches) { render(item); return; }
+                // closing an open area above can pull this one up under the header
+                var top = item.getBoundingClientRect().top;
+                if (top < 80) window.scrollBy(0, top - 96);
+            });
+        });
+        var sync = function () {
+            if (!wide.matches) return;
+            var current = items.filter(function (i) { return i.open; })[0] || fromHash() || items[0];
+            only(current);
+            current.open = true;
+            render(current);
+        };
+        var start = fromHash();
+        if (start) start.open = true;
+        areas.classList.add('is-ready');
+        sync();
+        if (wide.addEventListener) wide.addEventListener('change', sync);
+        else if (wide.addListener) wide.addListener(sync);
+        window.addEventListener('hashchange', function () {
+            var target = fromHash();
+            if (!target) return;
+            target.open = true;
+            if (wide.matches) render(target);
+        });
+    }
+
     // Enquiry form: posts to the form relay, which emails enquiry@rlchambers.com.my.
     var form = document.querySelector('form[data-rlc-enquiry]');
     if (!form) return;
