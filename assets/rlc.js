@@ -40,18 +40,28 @@
         var panel = areas.querySelector('.rlc-area-panel');
         var wide = window.matchMedia('(min-width: 992px)');
         var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+        // fade the panel's bottom edge while a long write-up has more to scroll to
+        var more = function () {
+            var scroller = panel && panel.querySelector('.rlc-area-scroll');
+            if (!scroller) return;
+            panel.classList.toggle('has-more', scroller.scrollTop + scroller.clientHeight < scroller.scrollHeight - 4);
+        };
         var render = function (item) {
             if (!panel || !item) return;
-            var text = [].slice.call(item.querySelectorAll('.rlc-area-body p'))
-                .map(function (p) { return p.outerHTML; }).join('');
-            panel.innerHTML = '<div class="label rlc-area-count">' + pad(items.indexOf(item) + 1) + ' / ' + items.length + '</div>' +
+            var source = item.querySelector('.rlc-area-text');
+            var text = source ? '<div class="rlc-area-text">' + source.innerHTML + '</div>' : '';
+            panel.innerHTML = '<div class="rlc-area-scroll">' +
+                '<div class="label rlc-area-count">' + pad(items.indexOf(item) + 1) + ' / ' + items.length + '</div>' +
                 '<h2 class="rlc-area-title">' + item.querySelector('summary').innerHTML + '</h2>' + text +
-                '<a class="primary-button w-button" href="contact-us.html">Discuss your matter</a>';
+                '<a class="primary-button w-button" href="contact-us.html">Discuss your matter</a></div>';
             panel.hidden = false;
             panel.classList.remove('is-in');
             void panel.offsetWidth;
             panel.classList.add('is-in');
+            panel.querySelector('.rlc-area-scroll').addEventListener('scroll', more, { passive: true });
+            more();
         };
+        window.addEventListener('resize', more);
         var only = function (item) {
             items.forEach(function (other) { if (other !== item && other.open) other.open = false; });
         };

@@ -32,7 +32,7 @@ PAGES = [
     dict(out='services.html', wf='69e49a695752288e8bdbb46b', scripts='services.html', path='services.html', cta=True,
          title='Areas of Expertise | Rhu Law Chambers',
          desc='Corporate and commercial matters, business structuring, investments, cross-border transactions, '
-              'commercial agreements and dispute resolution. See all 25 areas of expertise.'),
+              'commercial agreements and dispute resolution. See all 17 areas of expertise.'),
     dict(out='our-team.html', wf='69e49a695752288e8bdbb46f', scripts='our-team.html', path='our-team.html', cta=True,
          title='Our Team | Rhu Law Chambers',
          desc='Meet the partners and consultants of Rhu Law Chambers, bringing legal, commercial and cross-border '
