@@ -153,8 +153,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .section.process-section.rlc-vision { padding-top: var(--_spacing-system---spacing--section-spacing); }
 .rlc-vision h2 { font-size: clamp(2rem, 1.3rem + 1.6vw, 2.75rem); }
 @media (min-width: 992px) { .rlc-vision .process-image { margin-top: 520px; } }
-/* keep the Twin Towers and the team in frame (desktop strip and square phone crop) */
-.rlc-vision .process-image { object-position: 50% 33%; }
+/* boardroom: keep the skyline and the seated team in frame; on phones, centre the three on the left */
+.rlc-vision .process-image { object-position: 50% 50%; }
 @media (max-width: 767px) { .rlc-vision .process-image { object-position: 24% 50%; } }
 .testimonial-tab-link.w--current .commitment-tab-label { color: var(--rlc-brass-dark) !important; }
 .commitment-tab-label {
