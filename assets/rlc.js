@@ -32,6 +32,28 @@
         }).observe(menuButton, { attributes: true, attributeFilter: ['class'] });
     }
 
+    // Hero: the moving city plays over its still frame. Skipped when the visitor
+    // prefers reduced motion or has data saver on; paused while off screen.
+    var heroVideo = document.querySelector('.rlc-hero-video');
+    var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var saveData = navigator.connection && navigator.connection.saveData;
+    if (heroVideo && !calm && !saveData) {
+        heroVideo.muted = true;
+        heroVideo.preload = 'auto';
+        heroVideo.addEventListener('playing', function () { heroVideo.classList.add('is-playing'); });
+        var playHero = function () {
+            var p = heroVideo.play();
+            if (p && p.catch) p.catch(function () {});
+        };
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (entries) {
+                if (entries[0].isIntersecting) playHero(); else heroVideo.pause();
+            }).observe(heroVideo.parentNode);
+        } else {
+            playHero();
+        }
+    }
+
     // Areas of expertise: on phones each area opens its explanation in place;
     // on wide screens the open area is shown in a column beside the list.
     var areas = document.querySelector('[data-rlc-areas]');

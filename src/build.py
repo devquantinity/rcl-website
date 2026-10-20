@@ -104,7 +104,7 @@ def build(page):
         '<link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />',
     ]
     if page['out'] == 'index.html':
-        meta.append('<link as="image" fetchpriority="high" href="assets/hero-kl.jpg" imagesizes="(max-width: 479px) 100vw, 75vw" imagesrcset="assets/hero-kl-960.jpg 960w, assets/hero-kl.jpg 1920w" rel="preload" />')
+        meta.append('<link as="image" fetchpriority="high" href="assets/hero-city.jpg" imagesizes="(max-width: 479px) 100vw, 75vw" imagesrcset="assets/hero-city-960.jpg 960w, assets/hero-city.jpg 1920w" rel="preload" />')
     meta += [
         TEMPLATE_CSS,
         FONTS,

@@ -85,15 +85,21 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     }
 }
 .home-banner-image { opacity: 1 !important; transform: none !important; translate: none !important; }
-.home-banner-bg {
-    animation: rlc-hero-drift 32s ease-in-out infinite alternate;
-    transform-origin: 58% 62%;
-    will-change: transform;
+/* moving city: the still frame shows first and the video fades in once it is actually playing */
+.rlc-hero-video {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+    pointer-events: none;
 }
-@keyframes rlc-hero-drift {
-    from { transform: scale(1.05); }
-    to   { transform: scale(1.15) translate3d(-1.1%, -1.4%, 0); }
-}
+.rlc-hero-video.is-playing { opacity: 1; }
 .rlc-eyebrow {
     color: var(--rlc-brass-light) !important;
     font-size: 14px;
@@ -450,7 +456,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .home-banner-bg { animation: none; transform: scale(1.03); }
+    .rlc-hero-video { display: none; }
     .rlc-rise { animation-duration: 1ms !important; animation-delay: 0s !important; }
     .navbar:not(.white), .brand-logo { transition: none; }
 }
@@ -525,6 +531,7 @@ html.rlc-menu-open, html.rlc-menu-open body { overflow: hidden; }
     .home-banner-section { padding-top: clamp(250px, 56vw + 70px, 400px); padding-bottom: 56px; }
     .home-banner-bg { inset: 0 0 auto 0; width: 100%; max-width: none; height: clamp(330px, 66vw + 110px, 520px); }
     .home-banner-image { height: 100%; object-position: 70% 45%; }
+    .rlc-hero-video { object-position: 70% 45%; }
     .home-banner-gradient {
         inset: 0;
         width: 100%;
