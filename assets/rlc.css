@@ -69,6 +69,17 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 
 /* ---------- home hero ---------- */
 .home-banner-section { overflow: hidden; }
+/* the hero always fills the screen: the headline sits centred above the benefits and the team card,
+   which stay on the bottom edge (phones keep their own stacked layout, which is already taller) */
+@media (min-width: 768px) {
+    .home-banner-section { display: flex; flex-direction: column; min-height: 100vh; min-height: 100svh; }
+    .home-banner-section > .base-container { display: flex; flex-direction: column; flex: 1 0 auto; width: 100%; }
+    .home-banner-section > .base-container::before,
+    .home-banner-section > .base-container::after { display: none; }
+    .home-banner-wrap { flex: 1 0 auto; }
+    .home-banner-left-wrap { align-self: stretch; }
+    .home-banner-title-wrap { margin-top: auto; margin-bottom: auto; }
+}
 /* one smooth navy fade over the photo, plus a lower fade so the benefit text stays readable */
 @media (min-width: 768px) {
     .home-banner-gradient {
