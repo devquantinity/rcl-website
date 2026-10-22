@@ -163,6 +163,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .services-wrap .service-collection-item { flex: 1; }
 /* enquiry banner copy sits on a photo: lift it to a readable size and tone */
 .cta-paragraph-wrap .light-text { color: #e4e8f0; font-size: 18px; line-height: 1.55; }
+/* enquiry banner photo: keep the faces in frame on wide screens */
+.cta-image { object-position: 50% 30%; }
 .rlc-team-title { max-width: 620px; }
 .section-title-wrap.rlc-wide { max-width: 820px; }
 .ceo-quote-card { height: auto !important; min-height: 400px; }
