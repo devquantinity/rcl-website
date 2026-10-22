@@ -36,7 +36,7 @@ PAGES = [
     dict(out='our-team.html', wf='69e49a695752288e8bdbb46f', scripts='our-team.html', path='our-team.html', cta=True,
          title='Our Team | Rhu Law Chambers',
          desc='Meet the partners and consultants of Rhu Law Chambers, bringing legal, commercial and cross-border '
-              'experience from Malaysia, Taiwan and the United Kingdom.'),
+              'experience from Malaysia, Taiwan, Thailand and the United Kingdom.'),
     dict(out='contact-us.html', wf='69e49a695752288e8bdbb473', scripts='contact-us.html', path='contact-us.html', cta=False,
          title='Make an Enquiry | Rhu Law Chambers',
          desc='Contact Rhu Law Chambers in Mid Valley City, Kuala Lumpur. Email enquiry@rlchambers.com.my or call '
