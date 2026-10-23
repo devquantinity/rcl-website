@@ -61,9 +61,9 @@ PAGES = [
     dict(out='contact-us.html', wf='69e49a695752288e8bdbb473', scripts='contact-us.html', path='contact-us.html', cta=False,
          title='Make an Enquiry | Rhu Law Chambers',
          desc='Contact Rhu Law Chambers in Mid Valley City, Kuala Lumpur. Email enquiry@rlchambers.com.my or call '
-              '+60 12-399 1241.',
+              '+60 10-837 7531.',
          zh_title='立即咨询 | Rhu Law Chambers',
-         zh_desc='联系位于吉隆坡谷中城的 Rhu Law Chambers。电邮 enquiry@rlchambers.com.my，或致电 +60 12-399 1241。'),
+         zh_desc='联系位于吉隆坡谷中城的 Rhu Law Chambers。电邮 enquiry@rlchambers.com.my，或致电 +60 10-837 7531。'),
     # English only: a missing page anywhere on the site is answered with this one
     dict(out='404.html', wf='69e49a695752288e8bdbb469', scripts='index.html', path=None, cta=False,
          title='Page Not Found | Rhu Law Chambers', desc=DESCRIPTION),
@@ -79,7 +79,7 @@ JSON_LD = {
     'logo': SITE + '/assets/rlc-logo-navy.png',
     'image': SITE + '/assets/og-image.jpg',
     'email': 'enquiry@rlchambers.com.my',
-    'telephone': '+60 12-399 1241',
+    'telephone': '+60 10-837 7531',
     'address': {
         '@type': 'PostalAddress',
         'streetAddress': 'Level 27, Penthouse, Centrepoint North Tower, Lingkaran Syed Putra, Mid Valley City',

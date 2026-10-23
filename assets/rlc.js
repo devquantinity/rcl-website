@@ -8,13 +8,13 @@
         discuss: '咨询您的事务',
         sending: '发送中…',
         sent: '谢谢！您的咨询已发送，我们的团队将尽快与您联系。',
-        failed: '抱歉，您的咨询暂时无法发送。请发送电子邮件至 <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a>，或致电 +60 12-399 1241。',
+        failed: '抱歉，您的咨询暂时无法发送。请发送电子邮件至 <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a>，或致电 +60 10-837 7531。',
         subject: 'Website enquiry (Chinese site)'
     } : {
         discuss: 'Discuss your matter',
         sending: 'Sending…',
         sent: 'Thank you. Your enquiry has been sent and our team will get back to you shortly.',
-        failed: 'Sorry, your enquiry could not be sent just now. Please email us at <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a> or call +60 12-399 1241.',
+        failed: 'Sorry, your enquiry could not be sent just now. Please email us at <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a> or call +60 10-837 7531.',
         subject: 'Website enquiry'
     };
 
