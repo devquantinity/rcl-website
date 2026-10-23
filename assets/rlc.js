@@ -2,6 +2,22 @@
 (function () {
     'use strict';
 
+    // Words this script writes on the page, in the page's language (English or Simplified Chinese).
+    var zh = (document.documentElement.lang || '').toLowerCase().indexOf('zh') === 0;
+    var T = zh ? {
+        discuss: '咨询您的事务',
+        sending: '发送中…',
+        sent: '谢谢！您的咨询已发送，我们的团队将尽快与您联系。',
+        failed: '抱歉，您的咨询暂时无法发送。请发送电子邮件至 <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a>，或致电 +60 12-399 1241。',
+        subject: 'Website enquiry (Chinese site)'
+    } : {
+        discuss: 'Discuss your matter',
+        sending: 'Sending…',
+        sent: 'Thank you. Your enquiry has been sent and our team will get back to you shortly.',
+        failed: 'Sorry, your enquiry could not be sent just now. Please email us at <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a> or call +60 12-399 1241.',
+        subject: 'Website enquiry'
+    };
+
     // Dock the fixed header once the page scrolls so it stays legible over
     // light sections. A sentinel + IntersectionObserver never lags behind
     // fast or programmatic scrolling the way a scroll listener can.
@@ -75,7 +91,7 @@
             panel.innerHTML = '<div class="rlc-area-scroll">' +
                 '<div class="label rlc-area-count">' + pad(items.indexOf(item) + 1) + ' / ' + items.length + '</div>' +
                 '<h2 class="rlc-area-title">' + item.querySelector('summary').innerHTML + '</h2>' + text +
-                '<a class="primary-button w-button" href="contact-us.html">Discuss your matter</a></div>';
+                '<a class="primary-button w-button" href="contact-us.html">' + T.discuss + '</a></div>';
             panel.hidden = false;
             panel.classList.remove('is-in');
             void panel.offsetWidth;
@@ -149,11 +165,11 @@
 
         var data = {};
         new FormData(form).forEach(function (value, key) { data[key] = value; });
-        data._subject = 'Website enquiry - ' + (data.name || 'New enquiry') + (data.area ? ' (' + data.area + ')' : '');
+        data._subject = T.subject + ' - ' + (data.name || 'New enquiry') + (data.area ? ' (' + data.area + ')' : '');
         data._template = 'table';
         data._captcha = 'false';
 
-        if (button) { button.disabled = true; button.value = 'Sending…'; }
+        if (button) { button.disabled = true; button.value = T.sending; }
         if (status) status.hidden = true;
 
         fetch(form.getAttribute('data-endpoint'), {
@@ -168,10 +184,10 @@
             })
             .then(function () {
                 form.reset();
-                show('success', 'Thank you. Your enquiry has been sent and our team will get back to you shortly.');
+                show('success', T.sent);
             })
             .catch(function () {
-                show('error', 'Sorry, your enquiry could not be sent just now. Please email us at <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a> or call +60 12-399 1241.');
+                show('error', T.failed);
             })
             .then(function () {
                 if (button) { button.disabled = false; button.value = idle; }

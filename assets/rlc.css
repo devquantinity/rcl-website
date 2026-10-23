@@ -734,3 +734,72 @@ html.rlc-menu-open, html.rlc-menu-open body { overflow: hidden; }
     .footer-form-title { font-size: 26px; }
     .footer-logo { height: 44px !important; }
 }
+
+/* =====================================================================
+   Language switch (EN / 中文) and the Chinese pages
+   ===================================================================== */
+.rlc-lang {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    margin: 0 20px 0 0;
+    padding: 0 14px 0 11px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    color: #fff;
+    font-family: Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+.rlc-lang:hover { color: var(--rlc-brass-light); border-color: var(--rlc-brass-light); }
+.rlc-lang-icon { flex: none; width: 15px; height: 15px; }
+.rlc-menu-contact .rlc-lang-icon { width: 18px; height: 18px; }
+/* small laptops: the header is full, so the switch drops its globe and the menu tightens a little */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .rlc-lang { margin-right: 14px; padding: 0 12px; }
+    .rlc-lang-icon { display: none; }
+    .nav-link { padding-left: 10px; padding-right: 10px; }
+}
+@media (max-width: 991px) {
+    .rlc-lang { height: 34px; margin: 0 16px 0 auto; padding: 0 12px 0 10px; }
+    .menu-button { flex: none; }
+}
+@media (max-width: 379px) {
+    .rlc-lang { margin-right: 12px; padding: 0 10px; }
+    .rlc-lang-icon { display: none; }
+}
+
+/* footer credit */
+.footer-rights.rlc-credit { display: block; }
+.rlc-credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(195, 202, 214, 0.45);
+    text-underline-offset: 3px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+.rlc-credit a:hover { color: #fff; text-decoration-color: currentColor; }
+
+/* Chinese: a serif for headings that sits with Playfair Display, the system's own Chinese font for text.
+   The template sets these on body as well, once per breakpoint. */
+html[lang|="zh"],
+html[lang|="zh"] body {
+    --_typography---fonts--headings: "Playfair Display", "Noto Serif SC", "Songti SC", "STSong", serif;
+    --_typography---fonts--primary: Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", sans-serif;
+}
+html[lang|="zh"] .rlc-area-text .rlc-area-sub { font-family: var(--_typography---fonts--primary); }
+/* Chinese lines can break between any two characters: even out headings, avoid a lone last character */
+html[lang|="zh"] h1, html[lang|="zh"] h2, html[lang|="zh"] h3, html[lang|="zh"] h4 {
+    text-wrap: balance;
+    word-break: keep-all;      /* break at punctuation and the <wbr> hints in zh.json, not inside a word */
+    overflow-wrap: break-word; /* ...unless a line would not fit at all */
+}
+html[lang|="zh"] p, html[lang|="zh"] li { text-wrap: pretty; }
+html[lang|="zh"] .home-banner-section h1 { line-height: 1.12; letter-spacing: 0; }
