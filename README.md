@@ -1,6 +1,6 @@
 # rcl-website
 
-Website for Rhu Law Chambers, deployed on Vercel (working address: rcl.gotka.com).
+Website for Rhu Law Chambers, deployed on Vercel at https://www.rlchambers.com.my (rlchambers.com.my redirects there; rcl.gotka.com was the working address).
 
 ## Editing pages
 
@@ -12,7 +12,7 @@ Website for Rhu Law Chambers, deployed on Vercel (working address: rcl.gotka.com
 - `src/partials/` - header, footer and the enquiry banner shared by every page
 - `src/scripts/` - each page's template scripts (leave as they are)
 - `assets/rlc.css`, `assets/rlc.js` - site styles and behaviour
-- When the site moves to rlchambers.com.my, change `SITE` in `src/build.py` and rebuild.
+- The site's address is `SITE` in `src/build.py`: canonical links, share previews and the enquiry form's return page use it.
 
 ## Chinese version
 

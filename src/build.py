@@ -20,8 +20,8 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.join(SRC, 'i18n'))
 import segment  # noqa: E402
 
-# Change to https://rlchambers.com.my when the domain is switched over.
-SITE = 'https://rcl.gotka.com'
+# The live address. rlchambers.com.my redirects here (set in Vercel), and so can rcl.gotka.com.
+SITE = 'https://www.rlchambers.com.my'
 
 TEMPLATE_CSS = ('<link crossorigin="anonymous" href="https://cdn.prod.website-files.com/69e49a695752288e8bdbb47e/css/'
                 'juristiq-wcopilot.webflow.shared.4d9dc6430.css" integrity="sha384-TZ3GQw0qtkh9JnL83zpq0rNdgUbtZV68RRm'
@@ -193,7 +193,7 @@ def build(page, lang='en'):
 
     doc = '\n'.join([
         '<!doctype html>',
-        f'<html data-wf-domain="rcl.gotka.com" data-wf-page="{page["wf"]}" data-wf-site="69e49a695752288e8bdbb47e" '
+        f'<html data-wf-domain="www.rlchambers.com.my" data-wf-page="{page["wf"]}" data-wf-site="69e49a695752288e8bdbb47e" '
         f'lang="{"zh-Hans" if zh else "en"}">',
         '<head>',
         '\n'.join(meta),
