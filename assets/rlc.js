@@ -6,12 +6,14 @@
     var zh = (document.documentElement.lang || '').toLowerCase().indexOf('zh') === 0;
     var T = zh ? {
         discuss: '咨询您的事务',
+        contact: '/zh/contact-us',
         sending: '发送中…',
         sent: '谢谢！您的咨询已发送，我们的团队将尽快与您联系。',
         failed: '抱歉，您的咨询暂时无法发送。请发送电子邮件至 <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a>，或致电 +60 10-837 7531。',
         subject: 'Website enquiry (Chinese site)'
     } : {
         discuss: 'Discuss your matter',
+        contact: '/contact-us',
         sending: 'Sending…',
         sent: 'Thank you. Your enquiry has been sent and our team will get back to you shortly.',
         failed: 'Sorry, your enquiry could not be sent just now. Please email us at <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a> or call +60 10-837 7531.',
@@ -49,11 +51,12 @@
     }
 
     // Hero: the moving city plays over its still frame. Skipped when the visitor
-    // prefers reduced motion or has data saver on; paused while off screen.
+    // prefers reduced motion or has data saver on; paused while off screen. It starts loading
+    // only after the page itself has loaded, so it never slows down the first view.
     var heroVideo = document.querySelector('.rlc-hero-video');
     var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var saveData = navigator.connection && navigator.connection.saveData;
-    if (heroVideo && !calm && !saveData) {
+    var startHero = function () {
         heroVideo.muted = true;
         heroVideo.preload = 'auto';
         heroVideo.addEventListener('playing', function () { heroVideo.classList.add('is-playing'); });
@@ -68,6 +71,10 @@
         } else {
             playHero();
         }
+    };
+    if (heroVideo && !calm && !saveData) {
+        if (document.readyState === 'complete') startHero();
+        else window.addEventListener('load', startHero);
     }
 
     // Areas of expertise: on phones each area opens its explanation in place;
@@ -91,7 +98,7 @@
             panel.innerHTML = '<div class="rlc-area-scroll">' +
                 '<div class="label rlc-area-count">' + pad(items.indexOf(item) + 1) + ' / ' + items.length + '</div>' +
                 '<h2 class="rlc-area-title">' + item.querySelector('summary').innerHTML + '</h2>' + text +
-                '<a class="primary-button w-button" href="contact-us.html">' + T.discuss + '</a></div>';
+                '<a class="primary-button w-button" href="' + T.contact + '">' + T.discuss + '</a></div>';
             panel.hidden = false;
             panel.classList.remove('is-in');
             void panel.offsetWidth;

@@ -6,7 +6,11 @@ Edit the files in src/pages and src/partials, then run:  python3 src/build.py
 Every page is also built in Simplified Chinese into zh/. The Chinese text lives in
 src/i18n/zh.json, keyed by the English text it replaces. If you change English copy,
 the build lists the strings that need a Chinese version: add them to zh.json and build again.
+
+In src/ the pages link to each other as about-us.html etc. The build turns those into the site's
+addresses without .html (/about-us, /zh/about-us), which Vercel serves (cleanUrls in vercel.json).
 """
+import hashlib
 import html
 import json
 import os
@@ -20,52 +24,61 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.join(SRC, 'i18n'))
 import segment  # noqa: E402
 
-# The live address. rlchambers.com.my redirects here (set in Vercel), and so can rcl.gotka.com.
-SITE = 'https://www.rlchambers.com.my'
+# The live address. www.rlchambers.com.my redirects here (set in Vercel's Domains settings).
+SITE = 'https://rlchambers.com.my'
 
-TEMPLATE_CSS = ('<link crossorigin="anonymous" href="https://cdn.prod.website-files.com/69e49a695752288e8bdbb47e/css/'
-                'juristiq-wcopilot.webflow.shared.4d9dc6430.css" integrity="sha384-TZ3GQw0qtkh9JnL83zpq0rNdgUbtZV68RRm'
-                'zJrCJWegWSWPCCiVbKJ/SxBXTSCxv" rel="stylesheet" type="text/css" />')
-FONT_FAMILIES = {
-    'en': 'family=Playfair+Display:wght@400..700&amp;family=Roboto:wght@300..700',
-    # Chinese headings get a matching serif; Chinese body text uses the system's own font (see rlc.css)
-    'zh': 'family=Noto+Serif+SC:wght@400..700&amp;family=Playfair+Display:wght@400..700&amp;family=Roboto:wght@300..700',
-}
+# Each page file and its address on the site.
+SLUGS = {'index.html': '', 'about-us.html': 'about-us', 'services.html': 'services',
+         'our-team.html': 'our-team', 'contact-us.html': 'contact-us'}
+
+# The template's stylesheet, served from this site (it used to load from Webflow's CDN).
+TEMPLATE_CSS = '<link href="/assets/base.css" rel="stylesheet" />'
+# Latin fonts are served from this site (see the @font-face rules in rlc.css).
+FONT_PRELOADS = [
+    '<link as="font" crossorigin="anonymous" href="/assets/fonts/playfair-display-latin.woff2" rel="preload" type="font/woff2" />',
+    '<link as="font" crossorigin="anonymous" href="/assets/fonts/roboto-latin.woff2" rel="preload" type="font/woff2" />',
+]
+# Chinese headings use Noto Serif SC from Google Fonts, loaded without holding up the first paint.
+ZH_FONT_URL = 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400..700&amp;display=swap'
+# Vercel Web Analytics (turned on in the project's Analytics tab on Vercel)
+ANALYTICS = ('<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>\n'
+             '<script defer src="/_vercel/insights/script.js"></script>')
+
 DESCRIPTION = ('Rhu Law Chambers is a boutique law firm in Kuala Lumpur providing practical and commercially '
                'focused legal solutions to businesses, entrepreneurs, investors and cross-border clients.')
 ZH_DESCRIPTION = ('Rhu Law Chambers 是一家立足吉隆坡的精品律师事务所，为企业、创业者、投资者及跨境客户提供务实且注重'
                   '商业实效的法律解决方案。')
 
 PAGES = [
-    dict(out='index.html', wf='69e49a695752288e8bdbb469', scripts='index.html', path='', cta=True,
+    dict(out='index.html', wf='69e49a695752288e8bdbb469', scripts='index.html', cta=True,
          title='Rhu Law Chambers | Boutique Law Firm in Kuala Lumpur', desc=DESCRIPTION,
          zh_title='Rhu Law Chambers | 吉隆坡精品律师事务所', zh_desc=ZH_DESCRIPTION),
-    dict(out='about-us.html', wf='69e49a695752288e8bdbb46a', scripts='about-us.html', path='about-us.html', cta=True,
+    dict(out='about-us.html', wf='69e49a695752288e8bdbb46a', scripts='about-us.html', cta=True,
          title='Our Vision & Purpose | Rhu Law Chambers',
          desc='Growing businesses, building relationships and creating lasting impact: the four purposes that guide '
               'Rhu Law Chambers, a boutique law firm in Kuala Lumpur.',
          zh_title='愿景与使命 | Rhu Law Chambers',
          zh_desc='助力企业成长、建立长久关系、创造深远影响：指引吉隆坡精品律师事务所 Rhu Law Chambers 的四大使命。'),
-    dict(out='services.html', wf='69e49a695752288e8bdbb46b', scripts='services.html', path='services.html', cta=True,
+    dict(out='services.html', wf='69e49a695752288e8bdbb46b', scripts='services.html', cta=True,
          title='Areas of Expertise | Rhu Law Chambers',
          desc='Corporate and commercial matters, business structuring, investments, cross-border transactions, '
               'commercial agreements and dispute resolution. See all 17 areas of expertise.',
          zh_title='专业领域 | Rhu Law Chambers',
          zh_desc='公司及商业事务、业务架构、投资、跨境交易、商业协议及争议解决。查看全部 17 个专业领域。'),
-    dict(out='our-team.html', wf='69e49a695752288e8bdbb46f', scripts='our-team.html', path='our-team.html', cta=True,
+    dict(out='our-team.html', wf='69e49a695752288e8bdbb46f', scripts='our-team.html', cta=True,
          title='Our Team | Rhu Law Chambers',
          desc='Meet the partners and consultants of Rhu Law Chambers, bringing legal, commercial and cross-border '
               'experience from Malaysia, Taiwan, Thailand and the United Kingdom.',
          zh_title='我们的团队 | Rhu Law Chambers',
          zh_desc='认识 Rhu Law Chambers 的合伙人与顾问。他们来自马来西亚、台湾、泰国及英国，为每一项事务带来法律、商业与跨境经验。'),
-    dict(out='contact-us.html', wf='69e49a695752288e8bdbb473', scripts='contact-us.html', path='contact-us.html', cta=False,
+    dict(out='contact-us.html', wf='69e49a695752288e8bdbb473', scripts='contact-us.html', cta=False,
          title='Make an Enquiry | Rhu Law Chambers',
          desc='Contact Rhu Law Chambers in Mid Valley City, Kuala Lumpur. Email enquiry@rlchambers.com.my or call '
               '+60 10-837 7531.',
          zh_title='立即咨询 | Rhu Law Chambers',
          zh_desc='联系位于吉隆坡谷中城的 Rhu Law Chambers。电邮 enquiry@rlchambers.com.my，或致电 +60 10-837 7531。'),
     # English only: a missing page anywhere on the site is answered with this one
-    dict(out='404.html', wf='69e49a695752288e8bdbb469', scripts='index.html', path=None, cta=False,
+    dict(out='404.html', wf='69e49a695752288e8bdbb469', scripts='index.html', cta=False, indexed=False,
          title='Page Not Found | Rhu Law Chambers', desc=DESCRIPTION),
 ]
 
@@ -98,6 +111,7 @@ with open(os.path.join(SRC, 'i18n', 'zh.json'), encoding='utf-8') as _fh:
     ZH = json.load(_fh)
 MISSING = {}
 USED = set()
+_HASHES = {}
 
 
 def read(*parts):
@@ -105,13 +119,41 @@ def read(*parts):
         return fh.read()
 
 
+def page_path(out, lang='en'):
+    """A page's address on the site: / /about-us /zh /zh/about-us ..."""
+    slug = SLUGS[out]
+    if lang == 'zh':
+        return '/zh' + ('/' + slug if slug else '')
+    return '/' + slug
+
+
+def link_pages(doc, lang):
+    """about-us.html#x -> /about-us#x (or /zh/about-us#x on a Chinese page)."""
+    names = '|'.join(re.escape(n) for n in SLUGS)
+    doc = re.sub(r'\{\{site\}\}/(' + names + r')', lambda m: '{{site}}' + page_path(m.group(1), lang), doc)
+    return re.sub(r'href="(' + names + r')(#[^"]*)?"',
+                  lambda m: f'href="{page_path(m.group(1), lang)}{m.group(2) or ""}"', doc)
+
+
+def versioned(doc):
+    """/assets/x.webp -> /assets/x.webp?v=<content hash>, so browsers can keep files cached for a year
+    (vercel.json) and still pick up a changed file straight away. Fonts never change and keep plain URLs."""
+    def sub(m):
+        path = m.group(1)
+        if path not in _HASHES:
+            with open(os.path.join(ROOT, path.lstrip('/')), 'rb') as fh:
+                _HASHES[path] = hashlib.sha256(fh.read()).hexdigest()[:10]
+        return f'{path}?v={_HASHES[path]}'
+    return re.sub(r'(?<=[\s"\'(,])(/assets/(?!fonts/)[\w./-]+\.(?:css|js|webp|jpg|jpeg|png|svg|mp4))(?=[\s"\'),])', sub, doc)
+
+
 def lang_switch(page, lang, menu=False):
     """The EN / 中文 link (in the header, or in the phone menu), pointing at the same page in the other language."""
-    target = page['out'] if page['path'] is not None else 'index.html'
+    target = page['out'] if page.get('indexed', True) else 'index.html'
     if lang == 'en':
-        href, code, title, label = f'zh/{target}', 'zh-Hans', '阅读中文版', '中文'
+        href, code, title, label = page_path(target, 'zh'), 'zh-Hans', '阅读中文版', '中文'
     else:
-        href, code, title, label = f'../{target}', 'en', 'Read this page in English', 'English' if menu else 'EN'
+        href, code, title, label = page_path(target, 'en'), 'en', 'Read this page in English', 'English' if menu else 'EN'
     css = 'rlc-menu-lang' if menu else 'rlc-lang'
     return f'<a class="{css}" href="{href}" hreflang="{code}" lang="{code}" title="{title}">{GLOBE}<span>{label}</span></a>'
 
@@ -127,10 +169,10 @@ def build(page, lang='en'):
         f'<title>{title}</title>',
         f'<meta content="{desc}" name="description" />',
     ]
-    if page['path'] is None:
+    if not page.get('indexed', True):
         meta.append('<meta content="noindex" name="robots" />')
     else:
-        en_url, zh_url = f"{SITE}/{page['path']}", f"{SITE}/zh/{page['path']}"
+        en_url, zh_url = SITE + page_path(page['out'], 'en'), SITE + page_path(page['out'], 'zh')
         url = zh_url if zh else en_url
         meta += [
             f'<link href="{url}" rel="canonical" />',
@@ -153,20 +195,26 @@ def build(page, lang='en'):
         f'<meta content="{SITE}/assets/og-image.jpg" name="twitter:image" />',
         '<meta content="#2a4173" name="theme-color" />',
         '<link crossorigin="anonymous" href="https://cdn.prod.website-files.com" rel="preconnect" />',
-        '<link href="https://fonts.googleapis.com" rel="preconnect" />',
-        '<link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />',
     ]
+    if zh:
+        meta += ['<link href="https://fonts.googleapis.com" rel="preconnect" />',
+                 '<link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />']
     if page['out'] == 'index.html':
-        meta.append('<link as="image" fetchpriority="high" href="assets/hero-city.jpg" imagesizes="(max-width: 479px) 100vw, 75vw" imagesrcset="assets/hero-city-960.jpg 960w, assets/hero-city.jpg 1920w" rel="preload" />')
-    ld = dict(JSON_LD, description=ZH_DESCRIPTION, url=SITE + '/zh/') if zh else JSON_LD
+        meta.append('<link as="image" fetchpriority="high" href="/assets/hero-city.webp" imagesizes="(max-width: 479px) 100vw, 75vw" '
+                    'imagesrcset="/assets/hero-city-768.webp 768w, /assets/hero-city-960.webp 960w, '
+                    '/assets/hero-city-1280.webp 1280w, /assets/hero-city.webp 1920w" rel="preload" />')
+    meta += FONT_PRELOADS
+    ld = dict(JSON_LD, description=ZH_DESCRIPTION, url=SITE + '/zh') if zh else JSON_LD
+    meta += [TEMPLATE_CSS, '<link href="/assets/rlc.css" rel="stylesheet" />']
+    if zh:
+        meta += [f'<link href="{ZH_FONT_URL}" media="print" onload="this.media=\'all\'" rel="stylesheet" />',
+                 f'<noscript><link href="{ZH_FONT_URL}" rel="stylesheet" /></noscript>']
     meta += [
-        TEMPLATE_CSS,
-        f'<link href="https://fonts.googleapis.com/css2?{FONT_FAMILIES[lang]}&amp;display=swap" rel="stylesheet" />',
-        '<link href="assets/rlc.css" rel="stylesheet" />',
         '<script>!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o'
         '||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>',
-        '<link href="assets/rlc-mark.png" rel="icon" type="image/png" />',
-        '<link href="assets/rlc-mark.png" rel="apple-touch-icon" />',
+        ANALYTICS,
+        '<link href="/assets/rlc-mark.png" rel="icon" type="image/png" />',
+        '<link href="/assets/rlc-mark.png" rel="apple-touch-icon" />',
         '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + '</script>',
     ]
 
@@ -175,10 +223,8 @@ def build(page, lang='en'):
                  lambda m: ' w--current" aria-current="page' if m.group(1) == page['out'] else '', nav)
     body = read('pages', page['out'])
     body = body.replace('{{cta}}', read('partials', 'cta.html') if page['cta'] else '')
-    content = '\n'.join([nav.rstrip(), body.rstrip(), read('partials', 'footer.html').rstrip()])
+    content = '\n'.join([nav.rstrip(), '<main id="main">', body.rstrip(), '</main>', read('partials', 'footer.html').rstrip()])
     if zh:
-        # links back into the site from the form relay stay on the Chinese pages
-        content = re.sub(r'\{\{site\}\}/(?=[\w-]+\.html)', '{{site}}/zh/', content)
         content = content.replace('name="_subject" type="hidden" value="Website enquiry"',
                                   'name="_subject" type="hidden" value="Website enquiry (Chinese site)"')
         # the embedded map shows its own labels in Chinese too
@@ -193,7 +239,7 @@ def build(page, lang='en'):
 
     doc = '\n'.join([
         '<!doctype html>',
-        f'<html data-wf-domain="www.rlchambers.com.my" data-wf-page="{page["wf"]}" data-wf-site="69e49a695752288e8bdbb47e" '
+        f'<html data-wf-domain="rlchambers.com.my" data-wf-page="{page["wf"]}" data-wf-site="69e49a695752288e8bdbb47e" '
         f'lang="{"zh-Hans" if zh else "en"}">',
         '<head>',
         '\n'.join(meta),
@@ -201,20 +247,20 @@ def build(page, lang='en'):
         '<body>',
         content,
         read('scripts', page['scripts']).rstrip(),
-        '<script src="assets/rlc.js"></script>',
+        '<script src="/assets/rlc.js"></script>',
         '</body>',
         '</html>',
         '',
     ])
+    doc = link_pages(doc, lang)
     doc = doc.replace('{{site}}', SITE)
-    if zh:
-        # the Chinese pages sit one folder down; page links stay relative so they stay in Chinese
-        doc = re.sub(r'(?<=[\s"\'(,])assets/', '../assets/', doc)
-    if page['path'] is None:
-        # 404.html is served for any missing path, so make every local URL root-relative.
-        doc = re.sub(r'(href|src)="(?!https?:|mailto:|tel:|#|/|data:)([^"]+)"', r'\1="/\2"', doc)
+    # every page uses root-relative addresses (/assets/..., /about-us), so the same markup works in /zh and on 404s
+    doc = re.sub(r'(?<=[\s"\'(,])assets/', '/assets/', doc)
+    doc = versioned(doc)
     leftover = re.findall(r'\{\{[^}]*\}\}', doc)
     assert not leftover, (page['out'], leftover)
+    relative = re.findall(r'\s(?:href|src)="(?!https?:|mailto:|tel:|#|/|data:)([^"]+)"', doc)
+    assert not relative, (page['out'], lang, relative[:5])
     out_dir = os.path.join(ROOT, 'zh') if zh else ROOT
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, page['out']), 'w', encoding='utf-8') as fh:
@@ -222,12 +268,35 @@ def build(page, lang='en'):
     return len(doc)
 
 
+def write_sitemap():
+    """sitemap.xml (both languages, each page linked to its translation) and robots.txt pointing at it."""
+    rows = ['<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for p in PAGES:
+        if not p.get('indexed', True):
+            continue
+        en, zh = SITE + page_path(p['out'], 'en'), SITE + page_path(p['out'], 'zh')
+        for loc in (en, zh):
+            rows += ['  <url>', f'    <loc>{loc}</loc>',
+                     f'    <xhtml:link rel="alternate" hreflang="en" href="{en}" />',
+                     f'    <xhtml:link rel="alternate" hreflang="zh-Hans" href="{zh}" />',
+                     f'    <xhtml:link rel="alternate" hreflang="x-default" href="{en}" />',
+                     '  </url>']
+    rows.append('</urlset>')
+    with open(os.path.join(ROOT, 'sitemap.xml'), 'w', encoding='utf-8') as fh:
+        fh.write('\n'.join(rows) + '\n')
+    with open(os.path.join(ROOT, 'robots.txt'), 'w', encoding='utf-8') as fh:
+        fh.write(f'User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n')
+
+
 if __name__ == '__main__':
     for p in PAGES:
         print(f"{p['out']:<19} {build(p):>7,} bytes")
     for p in PAGES:
-        if p['path'] is not None:
+        if p.get('indexed', True):
             print(f"{'zh/' + p['out']:<19} {build(p, 'zh'):>7,} bytes")
+    write_sitemap()
+    print('sitemap.xml, robots.txt')
     unused = [k for k in ZH if k not in USED]
     if unused:
         print(f'\n{len(unused)} entries in src/i18n/zh.json are no longer used on any page:')
