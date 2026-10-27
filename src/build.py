@@ -147,6 +147,12 @@ def versioned(doc):
     return re.sub(r'(?<=[\s"\'(,])(/assets/(?!fonts/)[\w./-]+\.(?:css|js|webp|jpg|jpeg|png|svg|mp4))(?=[\s"\'),])', sub, doc)
 
 
+def deferred(scripts):
+    """<script src=...> -> <script defer src=...>: the template's scripts still run in order once the page is
+    parsed, but no longer hold up the first view (they used to be on the critical path in PageSpeed)."""
+    return re.sub(r'<script(?![^>]*\bdefer\b)(?=[^>]*\bsrc=)', '<script defer', scripts)
+
+
 def lang_switch(page, lang, menu=False):
     """The EN / 中文 link (in the header, or in the phone menu), pointing at the same page in the other language."""
     target = page['out'] if page.get('indexed', True) else 'index.html'
@@ -246,8 +252,8 @@ def build(page, lang='en'):
         '</head>',
         '<body>',
         content,
-        read('scripts', page['scripts']).rstrip(),
-        '<script src="/assets/rlc.js"></script>',
+        deferred(read('scripts', page['scripts']).rstrip()),
+        '<script defer src="/assets/rlc.js"></script>',
         '</body>',
         '</html>',
         '',
