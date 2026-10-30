@@ -50,6 +50,53 @@
         }).observe(menuButton, { attributes: true, attributeFilter: ['class'] });
     }
 
+    // Links to a part of a page (#teh-ping-ying, #agribusiness): fonts and photos that arrive
+    // after the jump can push the target away on browsers without scroll anchoring (Safari,
+    // so most phones opening a link from WhatsApp). Put it back until the visitor scrolls.
+    // A reload or back/forward keeps the position the browser restores.
+    var landing = (function () {
+        var id = (window.location.hash || '').slice(1);
+        try { id = decodeURIComponent(id); } catch (e) { return null; }
+        return id ? document.getElementById(id) : null;
+    })();
+    var arrival = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+    if (landing && !(arrival && (arrival.type === 'reload' || arrival.type === 'back_forward'))) {
+        var userScrolled = false;
+        var stopSettling = function () { userScrolled = true; };
+        ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (type) {
+            window.addEventListener(type, stopSettling, { passive: true, once: true });
+        });
+        var settle = function () {
+            if (userScrolled) return;
+            var margin = parseFloat(window.getComputedStyle(landing).scrollMarginTop) || 0;
+            if (Math.abs(landing.getBoundingClientRect().top - margin) > 2) landing.scrollIntoView();
+        };
+        if ('ResizeObserver' in window) {
+            var growth = new ResizeObserver(settle);
+            growth.observe(document.body);
+            setTimeout(function () { growth.disconnect(); }, 6000);
+        }
+        window.addEventListener('load', settle);
+    }
+
+    // EN / 中文 switch: open the other language at the same place. Both languages share the
+    // anchors (#teh-ping-ying, #agribusiness), so carry over the part being read.
+    var langLinks = [].slice.call(document.querySelectorAll('a.rlc-lang, a.rlc-menu-lang'));
+    if (langLinks.length) {
+        var parts = [].slice.call(document.querySelectorAll('main article[id], main section[id]'));
+        var areaList = document.querySelector('[data-rlc-areas]');
+        var reading = function () {
+            var line = 140, id = '';
+            parts.forEach(function (part) { if (part.getBoundingClientRect().top <= line) id = part.id; });
+            var openArea = areaList && areaList.getBoundingClientRect().top <= line && areaList.querySelector('details[open][id]');
+            return openArea ? openArea.id : id;
+        };
+        var keepPlace = function () { this.hash = reading(); };
+        langLinks.forEach(function (link) {
+            ['pointerdown', 'focus', 'click'].forEach(function (type) { link.addEventListener(type, keepPlace); });
+        });
+    }
+
     // Hero: the moving city plays over its still frame. Skipped when the visitor
     // prefers reduced motion or has data saver on; paused while off screen. It starts loading
     // only after the page itself has loaded, so it never slows down the first view.

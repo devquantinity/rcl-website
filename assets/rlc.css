@@ -207,6 +207,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     gap: 24px 80px;
     padding: 56px 0;
     border-top: 1px solid var(--rlc-line);
+    scroll-margin-top: 90px;
 }
 .rlc-purpose:last-child { border-bottom: 1px solid var(--rlc-line); }
 .rlc-purpose-num {
