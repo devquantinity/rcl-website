@@ -231,8 +231,8 @@ def build(page, lang='en'):
     body = body.replace('{{cta}}', read('partials', 'cta.html') if page['cta'] else '')
     content = '\n'.join([nav.rstrip(), '<main id="main">', body.rstrip(), '</main>', read('partials', 'footer.html').rstrip()])
     if zh:
-        content = content.replace('name="_subject" type="hidden" value="Website enquiry"',
-                                  'name="_subject" type="hidden" value="Website enquiry (Chinese site)"')
+        content = content.replace('name="subject" type="hidden" value="Website enquiry"',
+                                  'name="subject" type="hidden" value="Website enquiry (Chinese site)"')
         # the embedded map shows its own labels in Chinese too
         content = content.replace('&amp;output=embed"', '&amp;output=embed&amp;hl=zh-CN"')
         USED.update(segment.strings(content))

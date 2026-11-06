@@ -30,4 +30,4 @@ The build also writes a Simplified Chinese copy of every page (except 404) to `z
 
 ## Enquiry form
 
-The form on `contact-us.html` is relayed by FormSubmit to enquiry@rlchambers.com.my. The first enquiry sent from the live site triggers an activation email to that inbox; click "Activate Form" once and later enquiries arrive normally.
+The form on `contact-us.html` is sent through Web3Forms (free plan, 250 enquiries a month), which emails each enquiry to the address set on the form in the Web3Forms dashboard (dev@quantinity.com account). The access key in the form is public by design. If Web3Forms does not answer within 12 seconds, or refuses the enquiry, the visitor is offered the same enquiry as a ready-to-send email to enquiry@rlchambers.com.my, so nothing is lost. FormSubmit, used until November 2026, went down in late October 2026.

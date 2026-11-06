@@ -197,7 +197,7 @@
         });
     }
 
-    // Enquiry form: posts to the form relay, which emails enquiry@rlchambers.com.my.
+    // Enquiry form: posts to Web3Forms, which emails each enquiry on to RLC.
     var form = document.querySelector('form[data-rlc-enquiry]');
     if (!form) return;
     var status = document.getElementById('rlc-enquiry-status');
@@ -214,14 +214,15 @@
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
-        if (form.elements._honey && form.elements._honey.value) return;
+        if (form.elements.botcheck && form.elements.botcheck.value) return;
         if (!form.checkValidity()) { form.reportValidity(); return; }
 
         var data = {};
         new FormData(form).forEach(function (value, key) { data[key] = value; });
-        data._subject = T.subject + ' - ' + (data.name || 'New enquiry') + (data.area ? ' (' + data.area + ')' : '');
-        data._template = 'table';
-        data._captcha = 'false';
+        data.subject = T.subject + ' - ' + (data.name || 'New enquiry') + (data.area ? ' (' + data.area + ')' : '');
+        // the redirect and the spam trap are only for visitors without JavaScript
+        delete data.redirect;
+        delete data.botcheck;
 
         if (button) { button.disabled = true; button.value = T.sending; }
         if (status) status.hidden = true;
@@ -268,6 +269,6 @@
             .map(function (name) { return label(name) + ': ' + data[name]; });
         var body = lines.join('\n') + '\n\n' + (data.message || '');
         if (body.length > 1800) body = body.slice(0, 1800) + '…';
-        return 'mailto:enquiry@rlchambers.com.my?subject=' + encodeURIComponent(data._subject) + '&body=' + encodeURIComponent(body);
+        return 'mailto:enquiry@rlchambers.com.my?subject=' + encodeURIComponent(data.subject) + '&body=' + encodeURIComponent(body);
     }
 })();
