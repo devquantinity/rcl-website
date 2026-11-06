@@ -9,14 +9,14 @@
         contact: '/zh/contact-us',
         sending: '发送中…',
         sent: '谢谢！您的咨询已发送，我们的团队将尽快与您联系。',
-        failed: '抱歉，您的咨询暂时无法发送。请发送电子邮件至 <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a>，或致电 +60 10-837 7531。',
+        failed: '抱歉，您的咨询暂时无法在线发送。<a class="rlc-mailto" href="mailto:enquiry@rlchambers.com.my">点此用电子邮件发送</a>（内容已为您填好），或致电 +60 10-837 7531。',
         subject: 'Website enquiry (Chinese site)'
     } : {
         discuss: 'Discuss your matter',
         contact: '/contact-us',
         sending: 'Sending…',
         sent: 'Thank you. Your enquiry has been sent and our team will get back to you shortly.',
-        failed: 'Sorry, your enquiry could not be sent just now. Please email us at <a href="mailto:enquiry@rlchambers.com.my">enquiry@rlchambers.com.my</a> or call +60 10-837 7531.',
+        failed: 'Sorry, your enquiry could not be sent just now. <a class="rlc-mailto" href="mailto:enquiry@rlchambers.com.my">Send it by email instead</a> (your details are already filled in), or call +60 10-837 7531.',
         subject: 'Website enquiry'
     };
 
@@ -226,10 +226,15 @@
         if (button) { button.disabled = true; button.value = T.sending; }
         if (status) status.hidden = true;
 
+        // Give up after 12 seconds: when the relay is down its requests can hang for 20s or more.
+        var controller = 'AbortController' in window ? new AbortController() : null;
+        var timer = setTimeout(function () { if (controller) controller.abort(); }, 12000);
+
         fetch(form.getAttribute('data-endpoint'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            signal: controller ? controller.signal : undefined
         })
             .then(function (response) {
                 return response.json().catch(function () { return {}; }).then(function (json) {
@@ -241,10 +246,28 @@
                 show('success', T.sent);
             })
             .catch(function () {
+                // Nothing is lost: offer the same enquiry as a ready-to-send email.
                 show('error', T.failed);
+                var link = status && status.querySelector('.rlc-mailto');
+                if (link) link.href = asEmail(data);
             })
             .then(function () {
+                clearTimeout(timer);
                 if (button) { button.disabled = false; button.value = idle; }
             });
     });
+
+    // The enquiry as a mailto: link, labelled in the page's language.
+    function asEmail(data) {
+        var label = function (name) {
+            var field = form.elements[name];
+            var tag = field && field.id && form.querySelector('label[for="' + field.id + '"]');
+            return (tag ? tag.textContent : name).replace(/\s*\*\s*$/, '').trim();
+        };
+        var lines = ['name', 'company', 'email', 'phone', 'area'].filter(function (name) { return data[name]; })
+            .map(function (name) { return label(name) + ': ' + data[name]; });
+        var body = lines.join('\n') + '\n\n' + (data.message || '');
+        if (body.length > 1800) body = body.slice(0, 1800) + '…';
+        return 'mailto:enquiry@rlchambers.com.my?subject=' + encodeURIComponent(data._subject) + '&body=' + encodeURIComponent(body);
+    }
 })();
