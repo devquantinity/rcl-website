@@ -147,10 +147,55 @@ def versioned(doc):
     return re.sub(r'(?<=[\s"\'(,])(/assets/(?!fonts/)[\w./-]+\.(?:css|js|webp|jpg|jpeg|png|svg|mp4))(?=[\s"\'),])', sub, doc)
 
 
-def deferred(scripts):
-    """<script src=...> -> <script defer src=...>: the template's scripts still run in order once the page is
-    parsed, but no longer hold up the first view (they used to be on the critical path in PageSpeed)."""
-    return re.sub(r'<script(?![^>]*\bdefer\b)(?=[^>]*\bsrc=)', '<script defer', scripts)
+LOADER = """<script>
+/* The template's scripts (jQuery, Webflow, GSAP) only drive the menu, tabs and scroll animations, so they
+   load once the page has shown, or at the first tap or scroll, instead of competing with the first view on
+   a slow phone connection. GSAP loads first so it is ready when Webflow starts. A menu tap made before the
+   scripts arrive is replayed once they have. */
+(function () {
+    var list = %s;
+    var started = false, menuTapped = false;
+    function start() {
+        if (started) return;
+        started = true;
+        list.forEach(function (item, i) {
+            var s = document.createElement('script');
+            s.src = item.src;
+            if (item.integrity) { s.integrity = item.integrity; s.crossOrigin = 'anonymous'; }
+            s.async = false;
+            if (i === list.length - 1) s.onload = function () {
+                if (!menuTapped) return;
+                setTimeout(function () { var b = document.querySelector('.menu-button'); if (b) b.click(); }, 300);
+            };
+            document.body.appendChild(s);
+        });
+    }
+    var menu = document.querySelector('.menu-button');
+    if (menu) menu.addEventListener('click', function () {
+        if (!window.Webflow || !window.Webflow.require) menuTapped = true;
+        start();
+    }, true);
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (type) {
+        window.addEventListener(type, start, { once: true, passive: true });
+    });
+    if (document.readyState === 'complete') setTimeout(start, 0);
+    else window.addEventListener('load', function () { setTimeout(start, 0); });
+})();
+</script>"""
+
+
+def delayed(scripts):
+    """The template's <script src> tags -> one small loader that adds them after the page has loaded (see LOADER)."""
+    items = []
+    for tag in re.findall(r'<script\b[^>]*\bsrc="[^"]+"[^>]*>', scripts):
+        item = {'src': re.search(r'\bsrc="([^"]+)"', tag).group(1)}
+        sri = re.search(r'\bintegrity="([^"]+)"', tag)
+        if sri:
+            item['integrity'] = sri.group(1)
+        items.append(item)
+    assert items, 'no template scripts found'
+    items.sort(key=lambda item: 0 if '/gsap/' in item['src'] else 1)   # stable: GSAP first, then the original order
+    return LOADER % json.dumps(items, separators=(',', ':'))
 
 
 def lang_switch(page, lang, menu=False):
@@ -252,7 +297,7 @@ def build(page, lang='en'):
         '</head>',
         '<body>',
         content,
-        deferred(read('scripts', page['scripts']).rstrip()),
+        delayed(read('scripts', page['scripts']).rstrip()),
         '<script defer src="/assets/rlc.js"></script>',
         '</body>',
         '</html>',
