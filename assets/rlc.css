@@ -205,7 +205,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: 24px 80px;
-    padding: 56px 0;
+    padding: 44px 0;
     border-top: 1px solid var(--rlc-line);
     scroll-margin-top: 90px;
 }
@@ -389,8 +389,8 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
 .rlc-profile {
     display: grid;
     grid-template-columns: 320px minmax(0, 1fr);
-    gap: 72px;
-    padding: 72px 0;
+    gap: 56px;
+    padding: 56px 0;
     border-top: 1px solid var(--rlc-line);
     scroll-margin-top: 90px;
 }
@@ -479,7 +479,7 @@ a, .w-button, .nav-link, .service-link, .team-member-name-link, .footer-link { t
     .footer-logo { height: 48px !important; }
 }
 @media (max-width: 767px) {
-    .rlc-purpose { grid-template-columns: 1fr; padding: 40px 0; gap: 16px; }
+    .rlc-purpose { grid-template-columns: 1fr; padding: 32px 0; gap: 16px; }
     .rlc-expertise-foot { padding: 28px 24px; }
 }
 @media (max-width: 479px) {
@@ -602,7 +602,7 @@ html.rlc-menu-open, html.rlc-menu-open body { overflow: hidden; }
     .team-page-collection-list .team-member-name-wrap p { font-size: 14px; line-height: 1.4; }
 
     /* profiles: small portrait beside the name, biography full width below */
-    .rlc-profile { grid-template-columns: 88px minmax(0, 1fr); column-gap: 18px; row-gap: 0; padding: 44px 0; align-items: center; }
+    .rlc-profile { grid-template-columns: 88px minmax(0, 1fr); column-gap: 18px; row-gap: 0; padding: 36px 0; align-items: center; }
     .rlc-profile:first-child { padding-top: 0; }
     .rlc-profile > div:first-child { grid-row: 1 / span 2; }
     .rlc-profile > div:last-child { display: contents; }
@@ -822,3 +822,11 @@ html[lang|="zh"] h1, html[lang|="zh"] h2, html[lang|="zh"] h3, html[lang|="zh"] 
 }
 html[lang|="zh"] p, html[lang|="zh"] li { text-wrap: pretty; }
 html[lang|="zh"] .home-banner-section h1 { line-height: 1.12; letter-spacing: 0; }
+
+/* ---------- tighter spacing ---------- */
+/* The template kept sections 150px apart on desktop (300px of empty space between them) and
+   used 64-130px gaps inside them. These overrides bring all of that down by about a third. */
+body { --_spacing-system---spacing--section-spacing: 72px; --_spacing-system---spacing--spacing-5xl: 48px; --_spacing-system---spacing--spacing-6xl: 56px; --_spacing-system---spacing--spacing-7xl: 72px; --_spacing-system---spacing--spacing-8xl: 88px; }
+@media (min-width: 1280px) { body { --_spacing-system---spacing--section-spacing: 100px; --_spacing-system---spacing--spacing-5xl: 48px; --_spacing-system---spacing--spacing-6xl: 56px; --_spacing-system---spacing--spacing-7xl: 72px; --_spacing-system---spacing--spacing-8xl: 96px; } }
+@media (max-width: 991px) { body { --_spacing-system---spacing--section-spacing: 64px; --_spacing-system---spacing--spacing-5xl: 44px; --_spacing-system---spacing--spacing-6xl: 52px; --_spacing-system---spacing--spacing-7xl: 60px; --_spacing-system---spacing--spacing-8xl: 72px; } }
+@media (max-width: 767px) { body { --_spacing-system---spacing--section-spacing: 48px; --_spacing-system---spacing--spacing-5xl: 40px; --_spacing-system---spacing--spacing-6xl: 48px; --_spacing-system---spacing--spacing-7xl: 56px; --_spacing-system---spacing--spacing-8xl: 64px; } }
